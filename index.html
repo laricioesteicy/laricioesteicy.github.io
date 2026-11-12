@@ -38,6 +38,10 @@ body.is-open{background:white}
 .scroll-paper h1,.scroll-paper h2,.scroll-paper h3,.scroll-paper p,.scroll-paper blockquote{overflow-wrap:anywhere}
 .scroll-paper h2,.venue h2{margin:0;font:700 20px/1.5 "Times New Roman",serif;text-transform:uppercase;color:var(--print)}
 .story-intro,.venue,.quote-end,.photos-panel{position:relative;isolation:isolate}
+.invitation-song{width:min(380px,calc(100% - 32px));margin:0 auto 24px;text-align:center}
+#song-player{width:100%;aspect-ratio:16/9;min-height:200px;background:#2e2621;border-radius:6px;overflow:hidden}
+#song-player iframe{display:block;width:100%;height:100%;min-height:200px;border:0}
+.invitation-song a{display:inline-block;margin-top:5px;color:var(--ink);font:13px/1.5 var(--sans);text-underline-offset:3px}
 .story-intro{padding:48px 0 128px}
 .story-intro::before,.photos-panel::before{position:absolute;content:"";pointer-events:none;z-index:-1;background-repeat:no-repeat;background-size:contain}
 .story-intro::before{width:52%;aspect-ratio:441/1254;top:2%;left:-24%;background-image:url('/media/tema/leaf.webp');opacity:.12}
@@ -280,6 +284,9 @@ body.is-open{background:white}
     <section class="story-intro">
       <button type="button" class="back-cover" id="back-cover">← Capa</button>
       <p id="model-tag"></p><h1 id="story-names" tabindex="-1"></h1>
+      <div class="invitation-song"><div id="song-player"></div>
+        <a href="https://www.youtube.com/watch?v=zQ2CguZZBsA" target="_blank" rel="noopener noreferrer">I Think They Call This Love · Elliot James Reay ↗</a>
+      </div>
       <figure class="opening-photo" id="cover-figure"><img id="cover-photo" alt="" hidden><span class="monogram-photo" id="cover-mark"></span><img class="frame-art" src="/media/tema/frame.webp" alt=""><img class="bouquet" src="/media/tema/gipsofila-marfim.webp" alt=""></figure>
     </section>
     <section class="story-panel ceremony">
@@ -326,7 +333,7 @@ body.is-open{background:white}
     <footer class="quote-end"><blockquote id="closing"></blockquote></footer>
   </div>
 </main>
-<audio id="sound" loop preload="none"></audio>
+
 <script>
 'use strict';
 const byId = id => document.getElementById(id);
@@ -359,9 +366,6 @@ const defaults = {
   closing:'“Melhor dois do que um” — Eclesiastes 4:9'
 };
 let savedModels = {}, canEdit = false, opened = false, slide = 0, timer = null, touching = null;
-const sound = byId('sound');
-sound.volume = .45;
-sound.src = '/media/marfim.mp3';
 const docFor = () => {
   const saved=savedModels.marfim?.value;
   const doc={...defaults,...saved};
@@ -552,7 +556,7 @@ function scatterPetals(origin){
       {transform:'translate('+dx*.27+'px,'+dy*.27+'px) rotate('+spin*.2+'deg)',opacity:1,offset:.15},
       {transform:'translate('+dx*.85+'px,'+dy*.85+'px) rotate('+spin*.7+'deg)',opacity:.9,offset:.57},
       {transform:'translate('+dx+'px,'+(dy+68)+'px) rotate('+spin+'deg) scale(.65)',opacity:0}
-    ],{duration:850+Math.random()*450,easing:'ease-out',fill:'both'});
+    ],{duration:1600+Math.random()*500,easing:'ease-out',fill:'both'});
     animations.push(flight.finished);
   }
   Promise.allSettled(animations).then(()=>layer.remove());
@@ -561,23 +565,20 @@ function openInvite(){
   const button=byId('open-invite').getBoundingClientRect();
   opened=true;byId('invite').hidden=false;byId('welcome').hidden=true;document.body.classList.add('is-open');
   renderPage();window.scrollTo(0,0);byId('story-names').focus({preventScroll:true});
-  sound.play().catch(()=>syncMusic());scatterPetals({x:button.left+button.width/2,y:button.top+button.height/2});
+  openSong();scatterPetals({x:button.left+button.width/2,y:button.top+button.height/2});
   if(!reduced.matches){startSlides();startReading();}
 }
 function closeInvite(){
   document.querySelector('.opening-petals')?.remove();
   stopReading();clearInterval(countdownTimer);opened=false;byId('invite').hidden=true;byId('welcome').hidden=false;document.body.classList.remove('is-open');
-  stopSlides();sound.pause();window.scrollTo(0,0);byId('open-invite').focus({preventScroll:true});
+  stopSlides();closeSong();window.scrollTo(0,0);byId('open-invite').focus({preventScroll:true});
 }
-function syncMusic(){byId('music-label').textContent=sound.paused?'Ouvir música':'Pausar música';byId('music').setAttribute('aria-pressed',String(!sound.paused));}
 async function refreshDocs(){
   const response=await fetch('/api/convites',{cache:'no-store'});if(!response.ok)throw Error();
   const result=await response.json();canEdit=result.editor;savedModels=result.modelos;
   return result;
 }
 byId('open-invite').onclick=openInvite;byId('back-cover').onclick=closeInvite;
-byId('music').onclick=()=>sound.paused?sound.play().catch(()=>message('Toque em Ouvir música para voltar a tentar.')):sound.pause();
-sound.onplay=syncMusic;sound.onpause=syncMusic;
 byId('prev').onclick=()=>step(-1);byId('next').onclick=()=>step(1);
 byId('auto').onclick=()=>timer?stopSlides():startSlides();
 const frame=byId('frame');
@@ -585,7 +586,7 @@ frame.onkeydown=e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefau
 frame.addEventListener('touchstart',e=>{const t=e.changedTouches[0];touching=[t.clientX,t.clientY];},{passive:true});
 frame.addEventListener('touchend',e=>{if(!touching)return;const t=e.changedTouches[0],dx=t.clientX-touching[0],dy=t.clientY-touching[1];if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx<0?1:-1);touching=null;},{passive:true});
 window.addEventListener('hashchange',()=>{if(opened)closeInvite();loadGuestCard();});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){stopSlides();sound.pause();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopSlides();pauseSong();}});
 document.addEventListener('DOMContentLoaded',async()=>{
   const editing=location.pathname==='/admin'||new URLSearchParams(location.search).get('editar')==='1';
   loadGuestCard();
@@ -602,6 +603,85 @@ document.addEventListener('DOMContentLoaded',async()=>{
 });
 
 'use strict';
+'use strict';
+const songVideo='zQ2CguZZBsA';
+const songHolder=byId('song-player');
+let songFrame=null,songPlayer=null,songReady=false;
+
+function musicLabel(playing){
+  const label=playing?'Pausar música':'Ouvir música';
+  byId('music-label').textContent=label;
+  byId('music').title=label;
+  byId('music').setAttribute('aria-pressed',String(playing));
+}
+function connectSongPlayer(){
+  if(!songFrame||songPlayer||!window.YT?.Player)return;
+  const frame=songFrame;
+  let triedAudio=false;
+  songPlayer=new window.YT.Player(frame,{events:{
+    onReady(event){
+      if(frame!==songFrame)return;
+      songReady=true;
+      event.target.setVolume(45);
+      if(document.hidden||!opened)event.target.pauseVideo();
+      else if(new URL(frame.src).searchParams.get('autoplay')==='1')event.target.playVideo();
+    },
+    onStateChange(event){
+      if(frame===songFrame)musicLabel(event.data===window.YT.PlayerState.PLAYING||event.data===window.YT.PlayerState.BUFFERING);
+    },
+    onAutoplayBlocked(){if(frame===songFrame)musicLabel(false);},
+    onError(event){
+      if(frame!==songFrame)return;
+      musicLabel(false);
+      if(!triedAudio&&[100,101,150].includes(event.data)&&opened&&!document.hidden){
+        triedAudio=true;
+        event.target.loadVideoById('EAnLyHsc3-Y');
+      }else songReady=false;
+    }
+  }});
+}
+window.onYouTubeIframeAPIReady=connectSongPlayer;
+function openSong(){
+  if(songFrame)return;
+  const frame=document.createElement('iframe');
+  frame.title='I Think They Call This Love — Elliot James Reay';
+  frame.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';
+  frame.allowFullscreen=true;
+  frame.referrerPolicy='origin';
+  const url=new URL('https://www.youtube-nocookie.com/embed/'+songVideo);
+  const bounds=songHolder.getBoundingClientRect();
+  const visibleHeight=Math.min(innerHeight,bounds.bottom)-Math.max(0,bounds.top);
+  url.search=new URLSearchParams({playsinline:'1',enablejsapi:'1',autoplay:visibleHeight>bounds.height/2?'1':'0',loop:'1',playlist:songVideo});
+  if(location.protocol==='https:'||location.protocol==='http:')url.searchParams.set('origin',location.origin);
+  frame.src=url.href;songFrame=frame;songHolder.replaceChildren(frame);
+  if(window.YT?.Player)connectSongPlayer();
+  else if(!byId('song-api')){
+    const script=document.createElement('script');
+    script.id='song-api';script.src='https://www.youtube.com/iframe_api';script.referrerPolicy='origin';
+    document.head.append(script);
+  }
+}
+function closeSong(){
+  const player=songPlayer;
+  songPlayer=null;songFrame=null;songReady=false;
+  if(player)player.destroy();
+  songHolder.replaceChildren();musicLabel(false);
+}
+function pauseSong(){
+  if(songReady)songPlayer.pauseVideo();
+  else if(songFrame)closeSong();
+}
+byId('music').onclick=()=>{
+  if(songReady){
+    const state=songPlayer.getPlayerState();
+    if(state===window.YT.PlayerState.PLAYING||state===window.YT.PlayerState.BUFFERING)songPlayer.pauseVideo();
+    else songPlayer.playVideo();
+  }else{
+    stopReading();songHolder.scrollIntoView({block:'center'});
+    openSong();songFrame.focus();
+  }
+};
+
 const playReading=byId('play-reading');
 let readingFrame=0, previousFrame=0, readingY=0, resumeAt=0;
 const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
