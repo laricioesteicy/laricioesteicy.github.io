@@ -124,7 +124,7 @@ body.is-open{background:white}
 .sprig.left{scale:-1 1}
 .family-invitation{margin:0 auto 12px;max-width:82%}
 .paper-card .heart-seal{margin-bottom:15px}
-.family-invitation #cover-intro{font-size:clamp(16px,2vw,20px);text-wrap:balance}
+#cover-intro{font-size:clamp(16px,2vw,20px);text-wrap:balance}
 .family-invitation #family-tail{font-style:italic;font-size:clamp(15px,2vw,18px)}
 .dedication #cover-seats{margin-top:8px;font-size:16px;color:#694f3e}
 .attendance-card form{margin:12px 0;text-align:left}
@@ -137,7 +137,7 @@ body.is-open{background:white}
 .attendance-item a{width:max-content;color:#684831}
 #attendance-list{max-height:230px;overflow-y:auto}
 
-.family-invitation #cover-intro{color:#66503e;font-size:clamp(19px,2.25vw,24px);line-height:1.25}
+#cover-intro{color:#66503e;font-size:clamp(19px,2.25vw,24px);line-height:1.25}
 .family-invitation #invite-verb{font-size:clamp(16px,1.8vw,19px);margin:4px 0 0}
 .family-invitation #family-tail{margin:1px 0 0}
 #editor{width:min(900px,calc(100% - 32px));max-height:94dvh;border:1px solid #baaa96;border-radius:14px}
@@ -252,7 +252,7 @@ body.is-open{background:white}
 .message-kind{display:block;color:#725c48}
 @media(max-width:560px){.admin-tabs{flex-wrap:wrap}.admin-tabs button{min-width:42%}.inbox th,.inbox td{padding:6px}.response-toolbar{align-items:center}}
 
-.map-actions{flex-wrap:wrap}.map-actions .registry-link{margin:0;padding:8px 10px}.map-help{font:14px/1.5 var(--sans);color:#665646;margin:4px 0 12px}.registry-box{margin:12px 0 16px!important;padding:14px 16px;border:1px solid #d8cbb8;border-radius:8px;background:#f7f2e7}.registry-box h4{margin:0 0 8px}#guest-tools:not([open]){display:none}#general-reply{margin-bottom:0}#general-reply label{font-size:14px}@media(max-width:650px){.map-heading{flex-direction:column;align-items:flex-start}.map-actions{justify-content:flex-start}}
+.map-actions{flex-wrap:wrap}.map-actions .registry-link{margin:0;padding:8px 10px}.map-help{font:14px/1.5 var(--sans);color:#665646;margin:4px 0 12px}.registry-box{margin:12px 0 16px!important;padding:14px 16px;border:1px solid #d8cbb8;border-radius:8px;background:#f7f2e7}.registry-box h4{margin:0 0 8px}#guest-tools:not([open]){display:none}@media(max-width:650px){.map-heading{flex-direction:column;align-items:flex-start}.map-actions{justify-content:flex-start}}
 
 </style>
 </head>
@@ -263,7 +263,7 @@ body.is-open{background:white}
   <article class="paper-card" aria-label="Convite de casamento">
     <img class="sprig left" src="/media/tema/gipsofila-marfim.webp" alt=""><img class="sprig right" src="/media/tema/gipsofila-marfim.webp" alt="">
     <div class="heart-seal" aria-hidden="true">♥</div>
-    <div class="dedication family-invitation"><p id="cover-intro">As famílias Wane &amp; Beve celebram o casamento dos seus filhos</p></div>
+    <div id="cover-intro" class="dedication family-invitation" hidden></div>
     <h1 class="couple-names"><span id="first-name">Larício Wane</span><i>&amp;</i><span id="second-name">Steicy Beve</span></h1>
     <span class="flourish" aria-hidden="true">❦</span>
     <p class="cover-date" id="welcome-date">26 de dezembro de 2026</p>
@@ -304,23 +304,21 @@ body.is-open{background:white}
       <h3 id="count-title"></h3><p id="countdown" class="countdown" aria-live="off"></p>
       <div class="calendar-sheet"><p id="cal-month"></p><div id="cal-grid" aria-label="Calendário do casamento"></div></div><a class="story-link" id="cal-link" target="_blank" rel="noopener noreferrer">Adicionar ao calendário</a>
     </section>
-    <section class="story-panel attendance"><div class="attendance-card"><h2 id="rsvp-title"></h2><p class="body-text" id="rsvp-copy"></p><p id="reply-guest" hidden></p>
+    <section id="attendance" class="story-panel attendance"><div class="attendance-card"><h2 id="rsvp-title"></h2><p class="body-text" id="rsvp-copy"></p><p id="reply-guest" hidden></p>
       <p id="rsvp-note" hidden></p><p id="reply-status" role="status" hidden></p>
       <div id="reply-actions" hidden>
         <button type="button" class="story-link" id="confirm-all">Confirmar presença</button>
         <details id="other-replies"><summary>Outras opções de resposta</summary><div id="reply-options"></div></details>
       </div>
-      <form id="general-reply" hidden><label for="personal-link">Ligação pessoal recebida no convite</label>
-        <input id="personal-link" required autocomplete="off" spellcheck="false" placeholder="Cole aqui a sua ligação">
-        <button type="submit" class="story-link" id="general-confirm">Confirmar presença</button></form></div>
-    </section></div>
+    </div></section></div>
     <section class="story-panel venue"><h2 id="place-caption"></h2><h3 id="event-venue"></h3><p id="event-address"></p>
       <iframe id="venue-map" title="Mapa do local da recepção" loading="lazy" referrerpolicy="no-referrer" hidden></iframe>
       <a class="story-link" id="event-map" target="_blank" rel="noopener noreferrer">Como chegar ↗</a>
     </section>
     <section class="story-panel schedule" id="program"><h2 id="agenda-heading"></h2><ol id="agenda-rows"></ol></section>
     <section class="story-panel guest-messages" aria-labelledby="message-title"><div class="attendance-card">
-      <h2 id="message-title">Deixe uma mensagem aos noivos</h2>
+      <h2 id="message-title">Deixe uma mensagem para nós</h2>
+      <p class="body-text">Teremos o prazer de ler a cada uma palavra.</p>
       <form id="guest-message-form"><label for="sender-name">O seu nome</label><input id="sender-name" maxlength="150" autocomplete="name" required>
       <label for="message-text">A sua mensagem</label><textarea id="message-text" rows="4" maxlength="2000" required></textarea>
       <button type="submit" id="send-message" class="story-link">Enviar mensagem</button></form><p role="status" id="send-status"></p>
@@ -343,7 +341,7 @@ const couplePhotos=Array.from({length:21},(_,index)=>'/media/noivos/'+String(ind
 const defaults = {
   first:'Larício Wane', second:'Steicy Beve', credit:'Larício Wane & Steicy Beve', coverLabel:'Convite para o Casamento de',
   host:'noivos', hostNames:'', greeting:'Noivos:', wording:'Com a bênção de Jeová e dos nossos Pais, temos a honra e a alegria de o(s) convidar para o nosso Casamento',
-  cardIntro:'As famílias Wane & Beve celebram o casamento dos seus filhos',cardGuest:'',cardNote:'',personalIntro:'Convite para',inviteVerb:'',inviteTail:'',
+  cardIntro:'',cardGuest:'',cardNote:'',personalIntro:'Convite para',inviteVerb:'',inviteTail:'',
   guest:'', table:'', date:'2026-12-26', time:'09:30', placeTitle:'Local da recepção',where:'Hotel Reina',
   address:'Do lado esquerdo da N1\n(Próximo à portagem de Cumbeza)\nMaputo, Marracuene',
   map:'https://www.google.com/maps/dir/?api=1&destination=Hotel%20Reina&destination_place_id=ChIJs2KE0WCR5h4RnUxRuSkqSkc',
@@ -392,6 +390,7 @@ const docFor = () => {
     if(doc.rsvpTitle==='Confirme sua presença')doc.rsvpTitle=defaults.rsvpTitle;
     if(doc.rsvpCopy.startsWith('Sua presença seria uma honra para nós.'))doc.rsvpCopy=defaults.rsvpCopy;
   }
+  if((saved?.copyVersion??0)<7 && /^As famílias Wane (?:&|e) Beve celebram o casamento dos seus filhos[.!]?$/i.test(doc.cardIntro.trim()))doc.cardIntro='';
   doc.photos=doc.photos.filter(src=>!examplePhotos.some(example=>example.src===src));
   if(saved && !saved.albumVersion){
     const oldPhotos=doc.photos;
@@ -651,9 +650,6 @@ function tableName(value){
   return table&&!/^mesa\b/i.test(table)?'Mesa '+table:table;
 }
 const publicInviteOrigin='https://laricioesteicy.github.io';
-const invitationOrigins=new Set([location.origin,publicInviteOrigin,
-  'https://steicy-laricio.perciliamuianga.chatgpt.site',
-  'https://steicy-laricio-modelos-de-casamento.perciliamuianga.chatgpt.site']);
 function replyURL(token){
   return publicInviteOrigin+'/#'+new URLSearchParams({convite:token});
 }
@@ -694,17 +690,17 @@ function describeReply(record){
 function renderReply(){
   const record=guestCard,active=!!record.ref;
   if(active && record.lugares===1 && !byId('sender-name').value)byId('sender-name').value=record.convidado;
-  const general=!active&&!record.loading&&!record.error;
-  byId('reply-actions').hidden=!active;
-  byId('general-reply').hidden=!general;
+  const primary=byId('confirm-all'),others=byId('other-replies'),options=byId('reply-options');
+  const confirmed=active&&record.presencas===record.lugares;
+  byId('reply-actions').hidden=!!(record.loading||record.error);
+  primary.textContent=confirmed?'Presença confirmada':'Confirmar presença';
+  primary.disabled=replyBusy||confirmed;
+  others.hidden=!active;
   setText('rsvp-note',record.loading?'A abrir o convite…':record.error||'');
   setText('reply-guest',active?[record.convidado,record.mesa].filter(Boolean).join(' · '):'');
-  setText('reply-status',record.presencas==null?'':describeReply(record)+(record.participante?' · '+record.participante:'')+'.');
+  const personalHint=record.showLinkHint?'Abra o seu convite pessoal recebido pelo WhatsApp e toque em «Confirmar presença».':'';
+  setText('reply-status',record.presencas==null?personalHint:describeReply(record)+(record.participante?' · '+record.participante:'')+'.');
   if(!active)return;
-  const primary=byId('confirm-all'),others=byId('other-replies'),options=byId('reply-options');
-  primary.textContent='Confirmar presença';
-  primary.hidden=record.presencas===record.lugares;
-  primary.disabled=replyBusy;
   others.open=false;others.querySelector('summary').textContent=record.presencas==null?'Outras opções de resposta':'Alterar resposta';
   options.replaceChildren();
   const add=(label,count,person='')=>{
@@ -741,39 +737,14 @@ async function saveReply(count,person=''){
     setText('reply-status','Resposta guardada. '+describeReply(record)+(person?' · '+person:'')+'.');
   }catch(error){
     if(record===guestCard){replyBusy=false;renderReply();setText('reply-status',error.message);}
-  }finally{replyBusy=false;byId('confirm-all').disabled=false;}
+  }finally{replyBusy=false;if(record!==guestCard)renderReply();}
 }
-const generalReply=byId('general-reply'),personalLink=byId('personal-link');
-generalReply.addEventListener('focusin',stopReading);
-generalReply.onsubmit=async event=>{
-  event.preventDefault();
-  const submit=byId('general-confirm');
-  if(submit.disabled||replyBusy)return;
-  let ref;
-  try{
-    const url=new URL(personalLink.value.trim());
-    const hash=new URLSearchParams(url.hash.slice(1));
-    const old=hash.get('cartao'),validToken=/^[0-9a-f]{32}$/;
-    if(!invitationOrigins.has(url.origin))throw Error();
-    if(url.pathname.startsWith('/convite/'))ref=url.pathname.slice('/convite/'.length);
-    else if(url.pathname==='/')ref=hash.get('convite')||old;
-    if(!validToken.test(ref||'')&&!/^(?=.{1,180}$)[a-z0-9]+(?:-[a-z0-9]+)+$/.test(ref||''))throw Error();
-  }catch{
-    setText('reply-status','Cole a ligação pessoal que recebeu da organização.');personalLink.focus();return;
-  }
-  const run=++guestLoad;
-  submit.disabled=true;personalLink.readOnly=true;
-  setText('reply-status','A verificar o convite…');
-  try{
-    const record=await attendanceRequest('/api/resposta/'+encodeURIComponent(ref));
-    if(run!==guestLoad)return;
-    const personalAddress=location.origin===publicInviteOrigin?replyURL(ref):location.origin+'/convite/'+encodeURIComponent(ref);
-    guestCard={...record,ref};history.replaceState(null,'',personalAddress);renderPage();
-    if(record.presencas!==record.lugares)await saveReply(record.lugares);
-  }catch(error){if(run===guestLoad)setText('reply-status',error.message);}
-  finally{submit.disabled=false;personalLink.readOnly=false;}
+byId('confirm-all').onclick=()=>{
+  if(guestCard.ref)return saveReply(guestCard.lugares);
+  stopReading();
+  guestCard.showLinkHint=true;
+  renderReply();
 };
-byId('confirm-all').onclick=()=>saveReply(guestCard.lugares);
 byId('reply-actions').addEventListener('focusin',()=>stopReading());
 let lastMessageRequest=null;
 const messageForm=byId('guest-message-form');
