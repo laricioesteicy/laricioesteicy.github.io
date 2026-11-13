@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#e7dece"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
 <title>Larício Wane &amp; Steicy Beve · Convite de casamento</title>
-<meta name="convite-wane-beve" content="1"><base href="https://steicy-laricio.perciliamuianga.chatgpt.site/"><style>
+<meta name="convite-wane-beve" content="1"><script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=BEz3sPYgWvowPBJwCFDHYXX25MB1EUO6u05V-JJPnkifxWj_9uDIDGLB4ErLAMFQE1cS-3ubBtvHMSNOG-5piD-v4hOFFrfMXu8HCkmysU8M0sWIKuKnCnE-uOIogws8zjCHNA2e-1NtYEyHIdugsQ" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9zdGVpY3ktbGFyaWNpby5wZXJjaWxpYW11aWFuZ2EuY2hhdGdwdC5zaXRlL2Rlc2Nhcmdhcy9jb252aXRlLXY3L2luZGV4Lmh0bWw"/><base href="https://steicy-laricio.perciliamuianga.chatgpt.site/"><style>
 :root{--paper:#fcf9f3;--ink:#554a41;--muted:#75685c;--rule:#ded4c5;--serif:Baskerville,'Iowan Old Style','Palatino Linotype','Book Antiqua',Georgia,serif;--sans:system-ui,sans-serif;color-scheme:light}
 *{box-sizing:border-box}body{margin:0;color:var(--ink);background:radial-gradient(ellipse at 16% 1%,#f1e9dc 0,transparent 62%),linear-gradient(126deg,#e7dfd1,#d8cbb7);font-family:var(--serif);min-height:100svh;overflow-x:hidden}
 [hidden]{display:none!important}button,input,textarea{font:inherit}button,a{-webkit-tap-highlight-color:transparent;touch-action:manipulation}button{cursor:pointer}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,.album-frame:focus-visible{outline:3px solid #815d32;outline-offset:4px}
@@ -38,10 +38,6 @@ body.is-open{background:white}
 .scroll-paper h1,.scroll-paper h2,.scroll-paper h3,.scroll-paper p,.scroll-paper blockquote{overflow-wrap:anywhere}
 .scroll-paper h2,.venue h2{margin:0;font:700 20px/1.5 "Times New Roman",serif;text-transform:uppercase;color:var(--print)}
 .story-intro,.venue,.quote-end,.photos-panel{position:relative;isolation:isolate}
-.invitation-song{width:min(380px,calc(100% - 32px));margin:0 auto 24px;text-align:center}
-#song-player{width:100%;aspect-ratio:16/9;min-height:200px;background:#2e2621;border-radius:6px;overflow:hidden}
-#song-player iframe{display:block;width:100%;height:100%;min-height:200px;border:0}
-.invitation-song a{display:inline-block;margin-top:5px;color:var(--ink);font:13px/1.5 var(--sans);text-underline-offset:3px}
 .story-intro{padding:48px 0 128px}
 .story-intro::before,.photos-panel::before{position:absolute;content:"";pointer-events:none;z-index:-1;background-repeat:no-repeat;background-size:contain}
 .story-intro::before{width:52%;aspect-ratio:441/1254;top:2%;left:-24%;background-image:url('/media/tema/leaf.webp');opacity:.12}
@@ -278,15 +274,12 @@ body.is-open{background:white}
 <main id="invite" hidden>
   <div class="reader-controls" aria-label="Reprodução do convite">
     <button type="button" id="play-reading" aria-pressed="false">Reproduzir convite</button>
-    <button type="button" id="music" aria-pressed="false"><span aria-hidden="true">♫</span> <span id="music-label">Ouvir música</span></button>
+    <button type="button" id="music" hidden aria-pressed="false"><span aria-hidden="true">♫</span> <span id="music-label">Ouvir música</span></button>
   </div>
   <div class="scroll-paper">
     <section class="story-intro">
       <button type="button" class="back-cover" id="back-cover">← Capa</button>
       <p id="model-tag"></p><h1 id="story-names" tabindex="-1"></h1>
-      <div class="invitation-song"><div id="song-player"></div>
-        <a href="https://www.youtube.com/watch?v=zQ2CguZZBsA" target="_blank" rel="noopener noreferrer">I Think They Call This Love · Elliot James Reay ↗</a>
-      </div>
       <figure class="opening-photo" id="cover-figure"><img id="cover-photo" alt="" hidden><span class="monogram-photo" id="cover-mark"></span><img class="frame-art" src="/media/tema/frame.webp" alt=""><img class="bouquet" src="/media/tema/gipsofila-marfim.webp" alt=""></figure>
     </section>
     <section class="story-panel ceremony">
@@ -575,8 +568,21 @@ function closeInvite(){
 }
 async function refreshDocs(){
   const response=await fetch('/api/convites',{cache:'no-store'});if(!response.ok)throw Error();
-  const result=await response.json();canEdit=result.editor;savedModels=result.modelos;
+  const result=await response.json();
+  if(!result.modelos||typeof result.modelos!=='object')throw Error('Resposta de convite inválida.');
+  canEdit=result.editor;savedModels=result.modelos;
+  const logout=byId('panel-logout');if(logout)logout.hidden=!result.panelSession;
   return result;
+}
+async function refreshPublicInvite(){
+  try{
+    await refreshDocs();
+  }catch{
+    // The cover and programme already contain the published defaults.
+    window.addEventListener('online',refreshPublicInvite,{once:true});
+    return;
+  }
+  renderPage();
 }
 byId('open-invite').onclick=openInvite;byId('back-cover').onclick=closeInvite;
 byId('prev').onclick=()=>step(-1);byId('next').onclick=()=>step(1);
@@ -588,99 +594,56 @@ frame.addEventListener('touchend',e=>{if(!touching)return;const t=e.changedTouch
 window.addEventListener('hashchange',()=>{if(opened)closeInvite();loadGuestCard();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopSlides();pauseSong();}});
 document.addEventListener('DOMContentLoaded',async()=>{
-  const editing=location.pathname==='/admin'||new URLSearchParams(location.search).get('editar')==='1';
   loadGuestCard();
+  const editing=byId('editor')&&(location.pathname==='/admin'||new URLSearchParams(location.search).get('editar')==='1');
+  if(!editing){
+    // File previews have an opaque or unrecognised origin. Only the published
+    // GitHub page can request live wedding data across origins.
+    if(!document.querySelector('base')||location.origin===publicInviteOrigin)await refreshPublicInvite();
+    return;
+  }
   try{
-    const result=await refreshDocs();renderPage();
-    if(!byId('editor'))return;
-    if(canEdit){
-      if(editing)openEditor(model);
-    }else if(editing){
-      if(result.signedIn)message('A edição está disponível na conta da proprietária do convite.');
-      else location.replace('/signin-with-chatgpt?return_to='+encodeURIComponent('/admin'+location.search));
-    }
-  }catch{message('Não foi possível carregar os últimos dados. Volte a tentar dentro de instantes.');}
+    await refreshDocs();
+  }catch{
+    message('Não foi possível abrir o painel da organização. Actualize a página para tentar de novo.');
+    return;
+  }
+  renderPage();
+  if(canEdit)openEditor(model);
+  else location.replace('/painel-entrada.html'+location.search);
 });
 
 'use strict';
 'use strict';
-const songVideo='zQ2CguZZBsA';
-const songHolder=byId('song-player');
-let songFrame=null,songPlayer=null,songReady=false;
+const backgroundSong=new Audio();
+const musicButton=byId('music');
+backgroundSong.preload='none';
+backgroundSong.loop=true;
+backgroundSong.volume=.45;
+backgroundSong.src=new URL('/media/musica-do-convite.mp3',document.baseURI).href;
 
-function musicLabel(playing){
+function showMusicState(){
+  const playing=!backgroundSong.paused;
   const label=playing?'Pausar música':'Ouvir música';
   byId('music-label').textContent=label;
-  byId('music').title=label;
-  byId('music').setAttribute('aria-pressed',String(playing));
+  musicButton.title=label;
+  musicButton.setAttribute('aria-pressed',String(playing));
 }
-function connectSongPlayer(){
-  if(!songFrame||songPlayer||!window.YT?.Player)return;
-  const frame=songFrame;
-  let triedAudio=false;
-  songPlayer=new window.YT.Player(frame,{events:{
-    onReady(event){
-      if(frame!==songFrame)return;
-      songReady=true;
-      event.target.setVolume(45);
-      if(document.hidden||!opened)event.target.pauseVideo();
-      else if(new URL(frame.src).searchParams.get('autoplay')==='1')event.target.playVideo();
-    },
-    onStateChange(event){
-      if(frame===songFrame)musicLabel(event.data===window.YT.PlayerState.PLAYING||event.data===window.YT.PlayerState.BUFFERING);
-    },
-    onAutoplayBlocked(){if(frame===songFrame)musicLabel(false);},
-    onError(event){
-      if(frame!==songFrame)return;
-      musicLabel(false);
-      if(!triedAudio&&[100,101,150].includes(event.data)&&opened&&!document.hidden){
-        triedAudio=true;
-        event.target.loadVideoById('EAnLyHsc3-Y');
-      }else songReady=false;
-    }
-  }});
-}
-window.onYouTubeIframeAPIReady=connectSongPlayer;
 function openSong(){
-  if(songFrame)return;
-  const frame=document.createElement('iframe');
-  frame.title='I Think They Call This Love — Elliot James Reay';
-  frame.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';
-  frame.allowFullscreen=true;
-  frame.referrerPolicy='origin';
-  const url=new URL('https://www.youtube-nocookie.com/embed/'+songVideo);
-  const bounds=songHolder.getBoundingClientRect();
-  const visibleHeight=Math.min(innerHeight,bounds.bottom)-Math.max(0,bounds.top);
-  url.search=new URLSearchParams({playsinline:'1',enablejsapi:'1',autoplay:visibleHeight>bounds.height/2?'1':'0',loop:'1',playlist:songVideo});
-  if(location.protocol==='https:'||location.protocol==='http:')url.searchParams.set('origin',location.origin);
-  frame.src=url.href;songFrame=frame;songHolder.replaceChildren(frame);
-  if(window.YT?.Player)connectSongPlayer();
-  else if(!byId('song-api')){
-    const script=document.createElement('script');
-    script.id='song-api';script.src='https://www.youtube.com/iframe_api';script.referrerPolicy='origin';
-    document.head.append(script);
-  }
-}
-function closeSong(){
-  const player=songPlayer;
-  songPlayer=null;songFrame=null;songReady=false;
-  if(player)player.destroy();
-  songHolder.replaceChildren();musicLabel(false);
+  backgroundSong.play().catch(showMusicState);
 }
 function pauseSong(){
-  if(songReady)songPlayer.pauseVideo();
-  else if(songFrame)closeSong();
+  backgroundSong.pause();
 }
-byId('music').onclick=()=>{
-  if(songReady){
-    const state=songPlayer.getPlayerState();
-    if(state===window.YT.PlayerState.PLAYING||state===window.YT.PlayerState.BUFFERING)songPlayer.pauseVideo();
-    else songPlayer.playVideo();
-  }else{
-    stopReading();songHolder.scrollIntoView({block:'center'});
-    openSong();songFrame.focus();
-  }
-};
+function closeSong(){
+  pauseSong();
+  backgroundSong.currentTime=0;
+}
+backgroundSong.addEventListener('canplay',()=>{musicButton.hidden=false;});
+backgroundSong.addEventListener('error',()=>{musicButton.hidden=true;});
+backgroundSong.addEventListener('play',showMusicState);
+backgroundSong.addEventListener('pause',showMusicState);
+musicButton.onclick=()=>backgroundSong.paused?openSong():pauseSong();
 
 const playReading=byId('play-reading');
 let readingFrame=0, previousFrame=0, readingY=0, resumeAt=0;
