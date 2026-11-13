@@ -49,12 +49,13 @@ body.is-open{background:white}
 .frame-art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 #cover-photo,.monogram-photo{position:absolute;left:6.5%;top:7.5%;width:82%;height:80%;object-fit:cover;clip-path:polygon(0 6%,87% 0,100% 93%,10% 100%)}
 .monogram-photo{display:grid;place-items:center;color:#8b7762;font:italic clamp(37px,6vw,72px) var(--serif);background:linear-gradient(#f1e8d7a6,#f4e7d78a),var(--door-photo) center 60%/cover no-repeat,#e7dac6}
-.bouquet{position:absolute;left:-5%;bottom:-5%;width:34%;pointer-events:none}
+.bouquet{position:absolute;left:-5%;bottom:-6%;width:34%;pointer-events:none}
 .ceremony,.reception-paper,.schedule{width:var(--card);margin-inline:auto;position:relative;isolation:isolate;border-radius:12px;background-color:#f6eadd;background-image:linear-gradient(#f6eadd80,#f6eadd80),url('/media/tema/paper.webp');background-blend-mode:normal,multiply;background-size:100% 100%;box-shadow:4px 6px 9px #56493b25}
 .ceremony{
-  display:flow-root;overflow:hidden;
+  display:flow-root;
   background:#e6daca var(--door-photo) center bottom / cover no-repeat;
 }
+.ceremony::after{content:"";position:absolute;pointer-events:none;top:clamp(105px,18vw,145px);right:-17%;width:32%;aspect-ratio:499/1159;background:url('/media/tema/flowers.webp') center/contain no-repeat;transform:scaleX(-1)}
 .ceremony-message{
   margin-bottom:77%;padding:25px clamp(18px,4vw,34px) 46px;
   background:linear-gradient(to bottom,#fff9eff2 0%,#fff9eff2 67%,#fff9efd6 82%,#fff9ef00);
@@ -64,13 +65,13 @@ body.is-open{background:white}
 .ceremony .body-text{font:20px/1.45 Baskerville,"Times New Roman",serif;margin:0 auto;max-width:490px;text-wrap:pretty}
 .reception-paper::before,.reception-paper::after,.schedule::before{content:"";pointer-events:none;position:absolute;z-index:-1;background-position:center;background-repeat:no-repeat;background-size:contain}
 .reception-paper::before{width:40%;aspect-ratio:441/1254;left:-27%;bottom:-14%;transform:rotate(17deg);background-image:url('/media/tema/leaf.webp')}
-.reception-paper::after,.schedule::before{width:32%;aspect-ratio:499/1159;right:-17%;bottom:-5%;background-image:url('/media/tema/gipsofila-marfim.webp')}
+.reception-paper::after,.schedule::before{width:32%;aspect-ratio:499/1159;right:-17%;bottom:-5%;background-image:url('/media/tema/flowers.webp')}
 .photos-panel{padding:36px 0 40px}.photos-panel::before{width:60%;aspect-ratio:441/1254;right:-31%;top:-6%;transform:rotate(40deg);opacity:.08;background-image:url('/media/tema/leaf.webp')}
-.gallery-stage{position:relative;isolation:isolate;display:grid;place-items:center;width:min(600px,100%);aspect-ratio:600/520;max-height:520px;margin:18px auto 0;overflow:hidden;perspective:1100px;touch-action:pan-y}
+.gallery-stage{position:relative;isolation:isolate;display:grid;place-items:center;width:min(760px,100%);aspect-ratio:1.55;max-height:520px;margin:18px auto 0;overflow:hidden;perspective:1100px;touch-action:pan-y}
 #album-deck{position:absolute;inset:0;perspective:1000px}
 .gallery-photo,.album-empty{position:absolute;left:50%;top:50%;height:92%;width:53%;max-width:320px;object-fit:cover;border-radius:16px;box-shadow:0 7px 16px #58483938}
 .gallery-photo,#cover-photo{filter:brightness(1.025) contrast(1.035) saturate(1.025)}
-.gallery-photo{width:auto;height:auto;max-width:74%;max-height:92%;object-fit:contain;transform:translate(-50%,-50%) translateX(var(--shift)) translateZ(var(--z)) rotateY(var(--angle)) scale(var(--scale));transition:transform .7s ease,opacity .7s;will-change:transform;pointer-events:none}
+.gallery-photo{width:auto;height:auto;max-width:54%;max-height:92%;object-fit:contain;left:calc(50% + var(--shift));transform:translate(-50%,-50%) translateZ(var(--z)) rotateY(var(--angle)) scale(var(--scale));transition:left .7s ease,transform .7s ease,opacity .7s;will-change:transform;pointer-events:none}
 .album-empty{display:grid;place-items:center;transform:translate(-50%,-50%);background:linear-gradient(0deg,#f9efdc6e,#f5e9d869),url('/media/tema/paper.webp') center/cover;font-size:38px;color:#9b8668}
 .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:0;background:#fff9edeb;color:#756457;box-shadow:0 2px 9px #46342630;font:30px/1 Georgia,serif;z-index:8}.gallery-arrow.previous{left:10px}.gallery-arrow.next{right:10px}
 .gallery-foot{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:8px;font-size:14px}.gallery-foot button{color:inherit;border:0;background:transparent;text-decoration:underline;font:12px var(--serif)}.paper-link,.story-link{display:inline-block;color:var(--print);text-underline-offset:4px;text-decoration:underline;font:15px/1.4 var(--serif)}
@@ -121,7 +122,6 @@ body.is-open{background:white}
 .opening-petals i:nth-child(3n+1){width:12px;height:16px;background:linear-gradient(140deg,#fffef9,#e8d8bc)}
 @media(prefers-reduced-motion:reduce){.opening-petals{display:none}}
 
-.sprig.left{scale:-1 1}
 .family-invitation{margin:0 auto 12px;max-width:82%}
 .paper-card .heart-seal{margin-bottom:15px}
 #cover-intro{font-size:clamp(16px,2vw,20px);text-wrap:balance}
@@ -253,6 +253,10 @@ body.is-open{background:white}
 @media(max-width:560px){.admin-tabs{flex-wrap:wrap}.admin-tabs button{min-width:42%}.inbox th,.inbox td{padding:6px}.response-toolbar{align-items:center}}
 
 .map-actions{flex-wrap:wrap}.map-actions .registry-link{margin:0;padding:8px 10px}.map-help{font:14px/1.5 var(--sans);color:#665646;margin:4px 0 12px}.registry-box{margin:12px 0 16px!important;padding:14px 16px;border:1px solid #d8cbb8;border-radius:8px;background:#f7f2e7}.registry-box h4{margin:0 0 8px}#guest-tools:not([open]){display:none}@media(max-width:650px){.map-heading{flex-direction:column;align-items:flex-start}.map-actions{justify-content:flex-start}}
+.sprig.left{transform-origin:top;rotate:20deg;opacity:.82}
+.sprig.right{transform-origin:top;scale:-1 1;rotate:-20deg;opacity:.82}
+.ceremony-message{border-radius:inherit}
+@media(max-width:600px){.ceremony::after{width:22%;right:-10%}.gallery-stage{aspect-ratio:1.25}.gallery-arrow{width:32px;height:32px}}
 
 </style>
 </head>
@@ -261,7 +265,7 @@ body.is-open{background:white}
 <p class="notice" role="status" id="load-status" hidden></p>
 <main id="welcome" class="welcome">
   <article class="paper-card" aria-label="Convite de casamento">
-    <img class="sprig left" src="/media/tema/gipsofila-marfim.webp" alt=""><img class="sprig right" src="/media/tema/gipsofila-marfim.webp" alt="">
+    <img class="sprig left" src="/media/tema/flowers.webp" alt=""><img class="sprig right" src="/media/tema/flowers.webp" alt="">
     <div class="heart-seal" aria-hidden="true">♥</div>
     <div id="cover-intro" class="dedication family-invitation" hidden></div>
     <h1 class="couple-names"><span id="first-name">Larício Wane</span><i>&amp;</i><span id="second-name">Steicy Beve</span></h1>
@@ -280,7 +284,7 @@ body.is-open{background:white}
     <section class="story-intro">
       <button type="button" class="back-cover" id="back-cover">← Capa</button>
       <p id="model-tag"></p><h1 id="story-names" tabindex="-1"></h1>
-      <figure class="opening-photo" id="cover-figure"><img id="cover-photo" alt="" hidden><span class="monogram-photo" id="cover-mark"></span><img class="frame-art" src="/media/tema/frame.webp" alt=""><img class="bouquet" src="/media/tema/gipsofila-marfim.webp" alt=""></figure>
+      <figure class="opening-photo" id="cover-figure"><img id="cover-photo" alt="" hidden><span class="monogram-photo" id="cover-mark"></span><img class="frame-art" src="/media/tema/frame.webp" alt=""><img class="bouquet" src="/media/tema/flowers.webp" alt=""></figure>
     </section>
     <section class="story-panel ceremony">
       <div class="ceremony-message">
@@ -459,11 +463,11 @@ function showSlide(){
     let distance=(i-slide+pics.length)%pics.length;
     if(distance>pics.length/2)distance-=pics.length;
     const side=Math.sign(distance), depth=Math.min(Math.abs(distance),3);
-    img.style.setProperty('--shift',(side*depth*60)+'%');
-    img.style.setProperty('--angle',(side*Math.min(depth,2)*42)+'deg');
-    img.style.setProperty('--z',(-depth*135)+'px');
-    img.style.setProperty('--scale',String(1-depth*.14));
-    img.style.zIndex=String(4-depth);img.style.opacity=[1,.75,.45,0][depth];
+    img.style.setProperty('--shift',(side*(depth===1?33:depth*23))+'%');
+    img.style.setProperty('--angle',(side*Math.min(depth,2)*18)+'deg');
+    img.style.setProperty('--z',(-depth*38)+'px');
+    img.style.setProperty('--scale',String(1-depth*.08));
+    img.style.zIndex=String(4-depth);img.style.opacity=[1,.97,.66,0][depth];
     img.setAttribute('aria-hidden',String(distance!==0));
   });
   setText('counter',(slide+1)+' / '+pics.length);
@@ -641,7 +645,7 @@ function closeSong(){
   backgroundSong.currentTime=0;
 }
 backgroundSong.addEventListener('canplay',()=>{musicButton.hidden=false;});
-backgroundSong.addEventListener('error',()=>{musicButton.hidden=true;});
+backgroundSong.addEventListener('error',()=>{musicButton.hidden=false;showMusicState();});
 backgroundSong.addEventListener('play',showMusicState);
 backgroundSong.addEventListener('pause',showMusicState);
 musicButton.onclick=()=>backgroundSong.paused?openSong():pauseSong();
